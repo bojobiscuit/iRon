@@ -50,4 +50,7 @@
     <None Include=".gitignore" />
     <None Include="config.json" />
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="overlayRay.png" />
+  </ItemGroup>
 </Project>
