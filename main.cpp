@@ -42,12 +42,14 @@ SOFTWARE.
 #include "OverlayStandings.h"
 #include "OverlayDebug.h"
 #include "OverlayDDU.h"
+#include "OverlayRay.h"
 
 enum class Hotkey
 {
     UiEdit,
     Standings,
     DDU,
+    Ray,
     Inputs,
     Relative,
     Cover
@@ -55,43 +57,47 @@ enum class Hotkey
 
 static void registerHotkeys()
 {
-    UnregisterHotKey( NULL, (int)Hotkey::UiEdit );
-    UnregisterHotKey( NULL, (int)Hotkey::Standings );
-    UnregisterHotKey( NULL, (int)Hotkey::DDU );
-    UnregisterHotKey( NULL, (int)Hotkey::Inputs );
-    UnregisterHotKey( NULL, (int)Hotkey::Relative );
-    UnregisterHotKey( NULL, (int)Hotkey::Cover );
+    UnregisterHotKey(NULL, (int)Hotkey::UiEdit);
+    UnregisterHotKey(NULL, (int)Hotkey::Standings);
+    UnregisterHotKey(NULL, (int)Hotkey::DDU);
+    UnregisterHotKey(NULL, (int)Hotkey::Ray);
+    UnregisterHotKey(NULL, (int)Hotkey::Inputs);
+    UnregisterHotKey(NULL, (int)Hotkey::Relative);
+    UnregisterHotKey(NULL, (int)Hotkey::Cover);
 
     UINT vk, mod;
 
-    if( parseHotkey( g_cfg.getString("General","ui_edit_hotkey","alt-j"),&mod,&vk) )
-        RegisterHotKey( NULL, (int)Hotkey::UiEdit, mod, vk );
+    if (parseHotkey(g_cfg.getString("General", "ui_edit_hotkey", "alt-j"), &mod, &vk))
+        RegisterHotKey(NULL, (int)Hotkey::UiEdit, mod, vk);
 
-    if( parseHotkey( g_cfg.getString("OverlayStandings","toggle_hotkey","ctrl-space"),&mod,&vk) )
-        RegisterHotKey( NULL, (int)Hotkey::Standings, mod, vk );
+    if (parseHotkey(g_cfg.getString("OverlayStandings", "toggle_hotkey", "ctrl-space"), &mod, &vk))
+        RegisterHotKey(NULL, (int)Hotkey::Standings, mod, vk);
 
-    if( parseHotkey( g_cfg.getString("OverlayDDU","toggle_hotkey","ctrl-1"),&mod,&vk) )
-        RegisterHotKey( NULL, (int)Hotkey::DDU, mod, vk );
+    if (parseHotkey(g_cfg.getString("OverlayDDU", "toggle_hotkey", "ctrl-1"), &mod, &vk))
+        RegisterHotKey(NULL, (int)Hotkey::DDU, mod, vk);
 
-    if( parseHotkey( g_cfg.getString("OverlayInputs","toggle_hotkey","ctrl-2"),&mod,&vk) )
-        RegisterHotKey( NULL, (int)Hotkey::Inputs, mod, vk );
+    if (parseHotkey(g_cfg.getString("OverlayRay", "toggle_hotkey", "ctrl-5"), &mod, &vk))
+        RegisterHotKey(NULL, (int)Hotkey::Ray, mod, vk);
 
-    if( parseHotkey( g_cfg.getString("OverlayRelative","toggle_hotkey","ctrl-3"),&mod,&vk) )
-        RegisterHotKey( NULL, (int)Hotkey::Relative, mod, vk );
+    if (parseHotkey(g_cfg.getString("OverlayInputs", "toggle_hotkey", "ctrl-2"), &mod, &vk))
+        RegisterHotKey(NULL, (int)Hotkey::Inputs, mod, vk);
 
-    if( parseHotkey( g_cfg.getString("OverlayCover","toggle_hotkey","ctrl-4"),&mod,&vk) )
-        RegisterHotKey( NULL, (int)Hotkey::Cover, mod, vk );
+    if (parseHotkey(g_cfg.getString("OverlayRelative", "toggle_hotkey", "ctrl-3"), &mod, &vk))
+        RegisterHotKey(NULL, (int)Hotkey::Relative, mod, vk);
+
+    if (parseHotkey(g_cfg.getString("OverlayCover", "toggle_hotkey", "ctrl-4"), &mod, &vk))
+        RegisterHotKey(NULL, (int)Hotkey::Cover, mod, vk);
 }
 
-static void handleConfigChange( std::vector<Overlay*> overlays, ConnectionStatus status )
+static void handleConfigChange(std::vector<Overlay*> overlays, ConnectionStatus status)
 {
     registerHotkeys();
 
     ir_handleConfigChange();
 
-    for( Overlay* o : overlays )
+    for (Overlay* o : overlays)
     {
-        o->enable( g_cfg.getBool(o->getName(),"enabled",true) && (
+        o->enable(g_cfg.getBool(o->getName(), "enabled", true) && (
             status == ConnectionStatus::DRIVING ||
             status == ConnectionStatus::CONNECTED && o->canEnableWhileNotDriving() ||
             status == ConnectionStatus::DISCONNECTED && o->canEnableWhileDisconnected()
@@ -102,9 +108,9 @@ static void handleConfigChange( std::vector<Overlay*> overlays, ConnectionStatus
 
 static void giveFocusToIracing()
 {
-    HWND hwnd = FindWindow( "SimWinClass", NULL );
-    if( hwnd )
-        SetForegroundWindow( hwnd );
+    HWND hwnd = FindWindow("SimWinClass", NULL);
+    if (hwnd)
+        SetForegroundWindow(hwnd);
 }
 
 int main()
@@ -123,15 +129,16 @@ int main()
     printf("Welcome to iRon! This app provides a few simple overlays for iRacing.\n\n");
     printf("NOTE: Most overlays are only active when iRacing is running and the car is on track.\n\n");
     printf("Current hotkeys:\n");
-    printf("    Move and resize overlays:     %s\n", g_cfg.getString("General","ui_edit_hotkey","").c_str() );
-    printf("    Toggle standings overlay:     %s\n", g_cfg.getString("OverlayStandings","toggle_hotkey","").c_str() );
-    printf("    Toggle DDU overlay:           %s\n", g_cfg.getString("OverlayDDU","toggle_hotkey","").c_str() );
-    printf("    Toggle inputs overlay:        %s\n", g_cfg.getString("OverlayInputs","toggle_hotkey","").c_str() );
-    printf("    Toggle relative overlay:      %s\n", g_cfg.getString("OverlayRelative","toggle_hotkey","").c_str() );
-    printf("    Toggle cover overlay:         %s\n", g_cfg.getString("OverlayCover","toggle_hotkey","").c_str() );
+    printf("    Move and resize overlays:     %s\n", g_cfg.getString("General", "ui_edit_hotkey", "").c_str());
+    printf("    Toggle standings overlay:     %s\n", g_cfg.getString("OverlayStandings", "toggle_hotkey", "").c_str());
+    printf("    Toggle DDU overlay:           %s\n", g_cfg.getString("OverlayDDU", "toggle_hotkey", "").c_str());
+    printf("    Toggle Ray overlay:           %s\n", g_cfg.getString("OverlayRay", "toggle_hotkey", "").c_str());
+    printf("    Toggle inputs overlay:        %s\n", g_cfg.getString("OverlayInputs", "toggle_hotkey", "").c_str());
+    printf("    Toggle relative overlay:      %s\n", g_cfg.getString("OverlayRelative", "toggle_hotkey", "").c_str());
+    printf("    Toggle cover overlay:         %s\n", g_cfg.getString("OverlayCover", "toggle_hotkey", "").c_str());
     printf("\niRon will generate a file called \'config.json\' in its current directory. This file\n"\
-           "stores your settings. You can edit the file at any time, even while iRon is running,\n"\
-           "to customize your overlays and hotkeys.\n\n");
+        "stores your settings. You can edit the file at any time, even while iRon is running,\n"\
+        "to customize your overlays and hotkeys.\n\n");
     printf("To exit iRon, simply close this console window.\n\n");
     printf("For the latest version or to submit bug reports, go to:\n\n        https://github.com/lespalt/iRon\n\n");
     printf("\nHappy Racing!\n");
@@ -139,102 +146,106 @@ int main()
 
     // Create overlays
     std::vector<Overlay*> overlays;
-    overlays.push_back( new OverlayCover() );
-    overlays.push_back( new OverlayRelative() );
-    overlays.push_back( new OverlayInputs() );
-    overlays.push_back( new OverlayStandings() );
-    overlays.push_back( new OverlayDDU() );
+    overlays.push_back(new OverlayCover());
+    overlays.push_back(new OverlayRelative());
+    overlays.push_back(new OverlayInputs());
+    overlays.push_back(new OverlayStandings());
+    overlays.push_back(new OverlayDDU());
+    overlays.push_back(new OverlayRay());
 #ifdef _DEBUG
-    overlays.push_back( new OverlayDebug() );
+    overlays.push_back(new OverlayDebug());
 #endif
 
     ConnectionStatus  status = ConnectionStatus::UNKNOWN;
     bool              uiEdit = false;
 
-    while( true )
+    while (true)
     {
         ConnectionStatus prevStatus = status;
         SessionType      prevSessionType = ir_session.sessionType;
 
         status = ir_tick();
-        if( status != prevStatus )
+        if (status != prevStatus)
         {
-            if( status == ConnectionStatus::DISCONNECTED )
+            if (status == ConnectionStatus::DISCONNECTED)
                 printf("Waiting for iRacing connection...\n");
             else
                 printf("iRacing connected (%s)\n", ConnectionStatusStr[(int)status]);
 
             // Enable user-selected overlays, but only if we're driving
-            handleConfigChange( overlays, status );
+            handleConfigChange(overlays, status);
         }
 
-        if( ir_session.sessionType != prevSessionType )
+        if (ir_session.sessionType != prevSessionType)
         {
-            for( Overlay* o : overlays )
+            for (Overlay* o : overlays)
                 o->sessionChanged();
         }
 
-        dbg( "connection status: %s, session type: %s, session state: %d, pace mode: %d, on track: %d, flags: 0x%X", ConnectionStatusStr[(int)status], SessionTypeStr[(int)ir_session.sessionType], ir_SessionState.getInt(), ir_PaceMode.getInt(), (int)ir_IsOnTrackCar.getBool(), ir_SessionFlags.getInt() );
+        dbg("connection status: %s, session type: %s, session state: %d, pace mode: %d, on track: %d, flags: 0x%X", ConnectionStatusStr[(int)status], SessionTypeStr[(int)ir_session.sessionType], ir_SessionState.getInt(), ir_PaceMode.getInt(), (int)ir_IsOnTrackCar.getBool(), ir_SessionFlags.getInt());
 
         // Update roughly every 16ms
-        for( Overlay* o : overlays )
+        for (Overlay* o : overlays)
             o->update();
 
         // Watch for config change signal
-        if( g_cfg.hasChanged() )
+        if (g_cfg.hasChanged())
         {
             g_cfg.load();
-            handleConfigChange( overlays, status );
+            handleConfigChange(overlays, status);
         }
 
         // Message pump
         MSG msg = {};
-        while(PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+        while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
         {
-            if( msg.message == WM_HOTKEY )
+            if (msg.message == WM_HOTKEY)
             {
-                if( msg.wParam == (int)Hotkey::UiEdit )
+                if (msg.wParam == (int)Hotkey::UiEdit)
                 {
                     uiEdit = !uiEdit;
-                    for( Overlay* o : overlays )
-                        o->enableUiEdit( uiEdit );
+                    for (Overlay* o : overlays)
+                        o->enableUiEdit(uiEdit);
 
                     // When we're exiting edit mode, attempt to make iRacing the foreground window again for best perf
                     // without the user having to manually click into iRacing.
-                    if( !uiEdit )
+                    if (!uiEdit)
                         giveFocusToIracing();
                 }
                 else
                 {
-                    switch( msg.wParam )
+                    switch (msg.wParam)
                     {
                     case (int)Hotkey::Standings:
-                        g_cfg.setBool( "OverlayStandings", "enabled", !g_cfg.getBool("OverlayStandings","enabled",true) );
+                        g_cfg.setBool("OverlayStandings", "enabled", !g_cfg.getBool("OverlayStandings", "enabled", true));
                         break;
                     case (int)Hotkey::DDU:
-                        g_cfg.setBool( "OverlayDDU", "enabled", !g_cfg.getBool("OverlayDDU","enabled",true) );
+                        g_cfg.setBool("OverlayDDU", "enabled", !g_cfg.getBool("OverlayDDU", "enabled", true));
+                        break;
+                    case (int)Hotkey::Ray:
+                        g_cfg.setBool("OverlayRay", "enabled", !g_cfg.getBool("OverlayRay", "enabled", true));
                         break;
                     case (int)Hotkey::Inputs:
-                        g_cfg.setBool( "OverlayInputs", "enabled", !g_cfg.getBool("OverlayInputs","enabled",true) );
+                        g_cfg.setBool("OverlayInputs", "enabled", !g_cfg.getBool("OverlayInputs", "enabled", true));
                         break;
                     case (int)Hotkey::Relative:
-                        g_cfg.setBool( "OverlayRelative", "enabled", !g_cfg.getBool("OverlayRelative","enabled",true) );
+                        g_cfg.setBool("OverlayRelative", "enabled", !g_cfg.getBool("OverlayRelative", "enabled", true));
                         break;
                     case (int)Hotkey::Cover:
-                        g_cfg.setBool( "OverlayCover", "enabled", !g_cfg.getBool("OverlayCover","enabled",true) );
+                        g_cfg.setBool("OverlayCover", "enabled", !g_cfg.getBool("OverlayCover", "enabled", true));
                         break;
                     }
-                    
+
                     g_cfg.save();
-                    handleConfigChange( overlays, status );
+                    handleConfigChange(overlays, status);
                 }
             }
 
             TranslateMessage(&msg);
-            DispatchMessage(&msg);            
+            DispatchMessage(&msg);
         }
     }
 
-    for( Overlay* o : overlays )
+    for (Overlay* o : overlays)
         delete o;
 }
