@@ -72,6 +72,8 @@ class OverlayInputs : public Overlay
 
             // Advance input vertices
             {
+                const float steeringWheelMax = g_cfg.getFloat(m_name, "steering_angle_max", ir_SteeringWheelAngleMax.getFloat());
+
                 for( int i=0; i<(int)m_throttleVtx.size()-1; ++i )
                     m_throttleVtx[i].y = m_throttleVtx[i+1].y;
                 m_throttleVtx[(int)m_throttleVtx.size()-1].y = ir_Throttle.getFloat();
@@ -82,7 +84,7 @@ class OverlayInputs : public Overlay
 
                 for( int i=0; i<(int)m_steerVtx.size()-1; ++i )
                     m_steerVtx[i].y = m_steerVtx[i+1].y;
-                m_steerVtx[(int)m_steerVtx.size()-1].y = std::min( 1.0f, std::max( 0.0f, (ir_SteeringWheelAngle.getFloat() / ir_SteeringWheelAngleMax.getFloat()) * -0.5f + 0.5f) );
+                m_steerVtx[(int)m_steerVtx.size()-1].y = std::min( 1.0f, std::max( 0.0f, (ir_SteeringWheelAngle.getFloat() / steeringWheelMax) * -0.5f + 0.5f) );
             }
 
             const float thickness = g_cfg.getFloat( m_name, "line_thickness", 2.0f );
