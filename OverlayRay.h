@@ -107,7 +107,7 @@ protected:
 			m_textFormatSmall2->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_CENTER);
 			m_textFormatSmall2->SetWordWrapping(DWRITE_WORD_WRAPPING_NO_WRAP);
 
-			HRCHECK(m_dwriteFactory->CreateTextFormat(toWide(font).c_str(), NULL, DWRITE_FONT_WEIGHT_LIGHT, DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_NORMAL, fontSize * 0.6f, L"en-us", &m_textFormatVerySmall));
+			HRCHECK(m_dwriteFactory->CreateTextFormat(toWide(font).c_str(), NULL, DWRITE_FONT_WEIGHT_NORMAL, DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_NORMAL, fontSize * 0.6f, L"en-us", &m_textFormatVerySmall));
 			m_textFormatVerySmall->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_CENTER);
 			m_textFormatVerySmall->SetWordWrapping(DWRITE_WORD_WRAPPING_NO_WRAP);
 
@@ -375,7 +375,7 @@ protected:
 			}
 
 			m_brush->SetColor(textCol);
-			m_text.render(m_renderTarget.Get(), L"Laps", m_textFormat.Get(), m_boxFuel.x0 + xoff, m_boxFuel.x1, m_boxFuel.y0 + m_boxFuel.h * 3.0f / 12.0f, m_brush.Get(), DWRITE_TEXT_ALIGNMENT_LEADING);
+			m_text.render(m_renderTarget.Get(), L"Laps", m_textFormatBold.Get(), m_boxFuel.x0 + xoff, m_boxFuel.x1, m_boxFuel.y0 + m_boxFuel.h * 3.0f / 12.0f, m_brush.Get(), DWRITE_TEXT_ALIGNMENT_LEADING);
 			m_text.render(m_renderTarget.Get(), L"Rem", m_textFormatSmall.Get(), m_boxFuel.x0 + xoff, m_boxFuel.x1, m_boxFuel.y0 + m_boxFuel.h * 5.5f / 12.0f, m_brush.Get(), DWRITE_TEXT_ALIGNMENT_LEADING);
 			m_text.render(m_renderTarget.Get(), L"Per", m_textFormatSmall.Get(), m_boxFuel.x0 + xoff, m_boxFuel.x1, m_boxFuel.y0 + m_boxFuel.h * 7.25f / 12.0f, m_brush.Get(), DWRITE_TEXT_ALIGNMENT_LEADING);
 			m_text.render(m_renderTarget.Get(), L"Fin+", m_textFormatSmall.Get(), m_boxFuel.x0 + xoff, m_boxFuel.x1, m_boxFuel.y0 + m_boxFuel.h * 9.0f / 12.0f, m_brush.Get(), DWRITE_TEXT_ALIGNMENT_LEADING);
@@ -490,9 +490,9 @@ protected:
 			else
 				m_brush->SetColor(textCol);
 			swprintf(s, _countof(s), L"%d", (int)(lf + 0.5f));
-			m_text.render(m_renderTarget.Get(), s, m_textFormatSmall.Get(), m_boxTires.x0, m_boxTires.x0 + m_boxTires.w / 2 - 20, m_boxTires.y0 + m_boxTires.h * 0.3f, m_brush.Get(), DWRITE_TEXT_ALIGNMENT_CENTER);
+			m_text.render(m_renderTarget.Get(), s, m_textFormatSmall2.Get(), m_boxTires.x0, m_boxTires.x0 + m_boxTires.w / 2 - 20, m_boxTires.y0 + m_boxTires.h * 0.3f, m_brush.Get(), DWRITE_TEXT_ALIGNMENT_CENTER);
 			swprintf(s, _countof(s), L"%d", (int)(lr + 0.5f));
-			m_text.render(m_renderTarget.Get(), s, m_textFormatSmall.Get(), m_boxTires.x0, m_boxTires.x0 + m_boxTires.w / 2 - 20, m_boxTires.y0 + m_boxTires.h * 0.7f, m_brush.Get(), DWRITE_TEXT_ALIGNMENT_CENTER);
+			m_text.render(m_renderTarget.Get(), s, m_textFormatSmall2.Get(), m_boxTires.x0, m_boxTires.x0 + m_boxTires.w / 2 - 20, m_boxTires.y0 + m_boxTires.h * 0.7f, m_brush.Get(), DWRITE_TEXT_ALIGNMENT_CENTER);
 
 			// Right
 			if (ir_dpRTireChange.getFloat())
@@ -500,9 +500,9 @@ protected:
 			else
 				m_brush->SetColor(textCol);
 			swprintf(s, _countof(s), L"%d", (int)(rf + 0.5f));
-			m_text.render(m_renderTarget.Get(), s, m_textFormatSmall.Get(), m_boxTires.x0 + m_boxTires.w / 2 + 20, m_boxTires.x1, m_boxTires.y0 + m_boxTires.h * 0.3f, m_brush.Get(), DWRITE_TEXT_ALIGNMENT_CENTER);
+			m_text.render(m_renderTarget.Get(), s, m_textFormatSmall2.Get(), m_boxTires.x0 + m_boxTires.w / 2 + 20, m_boxTires.x1, m_boxTires.y0 + m_boxTires.h * 0.3f, m_brush.Get(), DWRITE_TEXT_ALIGNMENT_CENTER);
 			swprintf(s, _countof(s), L"%d", (int)(rr + 0.5f));
-			m_text.render(m_renderTarget.Get(), s, m_textFormatSmall.Get(), m_boxTires.x0 + m_boxTires.w / 2 + 20, m_boxTires.x1, m_boxTires.y0 + m_boxTires.h * 0.7f, m_brush.Get(), DWRITE_TEXT_ALIGNMENT_CENTER);
+			m_text.render(m_renderTarget.Get(), s, m_textFormatSmall2.Get(), m_boxTires.x0 + m_boxTires.w / 2 + 20, m_boxTires.x1, m_boxTires.y0 + m_boxTires.h * 0.7f, m_brush.Get(), DWRITE_TEXT_ALIGNMENT_CENTER);
 
 			m_brush->SetColor(textCol);
 			m_text.render(m_renderTarget.Get(), toWide("Tires").c_str(), m_textFormatSmall.Get(), m_boxTires.x0, m_boxTires.x1, m_boxTires.y0 + m_boxTires.h * 0.45f, m_brush.Get(), DWRITE_TEXT_ALIGNMENT_CENTER);
